@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/LOAD_TEST
+    username: root
+    password: 1234
+
+logging:
+  level:
+    com.example.loadtest: TRACE
+
+mybatis:
+  mapper-locations: mybatis/mapper/**/*.xml
