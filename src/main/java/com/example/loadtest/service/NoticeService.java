@@ -2,6 +2,9 @@ package com.example.loadtest.service;
 
 import com.example.loadtest.dto.Notice;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,4 +19,7 @@ public interface NoticeService {
 
     List<Notice> findAllNoticesUsingRedis();
 
+    Notice saveNotice(Notice notice);
+
+    void deleteNotice(Long id);
 }
