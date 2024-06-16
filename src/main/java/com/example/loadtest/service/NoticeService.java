@@ -19,6 +19,8 @@ public interface NoticeService {
 
     List<Notice> findAllNoticesUsingRedis();
 
+    List<Notice> findByPageUsingRedis(HttpServletRequest request, int page, int pageSize);
+
     Notice saveNotice(Notice notice);
 
     void deleteNotice(Long id);

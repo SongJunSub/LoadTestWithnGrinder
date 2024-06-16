@@ -46,6 +46,14 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    @Cacheable(value = "NoticeReadMapper.findByPageUsingRedis", key = "#request.requestURI + '-' + #page + '-' + #pageSize", condition = "#page <= 5")
+    public List<Notice> findByPageUsingRedis(HttpServletRequest request, int page, int pageSize) {
+        page = (page - 1) * pageSize;
+
+        return noticeReadMapper.findByPage(page, pageSize);
+    }
+
+    @Override
     @CachePut(value = "NoticeReadMapper.findAll", key = "#result.id")
     @Transactional
     public Notice saveNotice(Notice notice) {
