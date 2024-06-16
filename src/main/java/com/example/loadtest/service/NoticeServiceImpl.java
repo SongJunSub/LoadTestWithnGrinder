@@ -5,7 +5,9 @@ import com.example.loadtest.mapper.NoticeReadMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +34,13 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public List<Notice> findNoticesByDates(LocalDateTime startDate, LocalDateTime endDate) {
         return noticeReadMapper.findNoticesByDates(startDate, endDate);
+    }
+
+    @Override
+    @Cacheable(value = "NoticeReadMapper.findAll")
+    @Transactional
+    public List<Notice> findAllNoticesUsingRedis() {
+        return noticeReadMapper.findAll();
     }
 
 }

@@ -14,4 +14,6 @@ public interface NoticeService {
 
     List<Notice> findNoticesByDates(LocalDateTime startDate, LocalDateTime endDate);
 
+    List<Notice> findAllNoticesUsingRedis();
+
 }
