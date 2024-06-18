@@ -52,4 +52,34 @@ SET profiling_history_size = 100;
 SELECT * FROM NOTICE WHERE createDate BETWEEN '20230115' AND '20230214';
 
 # 명령어 실행 후 실행한 쿼리를 찾아서 Query_id 찾기
-SHOW prifiles;
+SHOW PROFILES;
+
+# 해당 쿼리문의 수행 시간을 더 상세한 단위로 확인
+SHOW PROFILE FOR QUERY 25;
+
+# 해당 쿼리의 CPU 사용량을 분석
+SHOW PROFILE CPU FOR QUERY 25;
+
+# 쿼리에서 컬럼 값에 함수나 연산을 적용하면 인덱스가 효과적으로 사용되지 않을 수 있다.
+EXPLAIN
+SELECT * FROM NOTICE WHERE DATE_FORMAT(createDate, '%y-%m-%d') BETWEEN '20230115' AND '20230212';
+
+# 인덱스 미적용
+EXPLAIN
+SELECT * FROM NOTICE WHERE createDate LIKE '%2023-12%';
+
+# 인덱스 미적용
+EXPLAIN
+SELECT * FROM NOTICE WHERE createDate LIKE '%2023-12';
+
+# 인덱스 적용
+EXPLAIN
+SELECT * FROM NOTICE WHERE createDate LIKE '2023-12%';
+
+# NULL 값을 비교하는 경우 인덱스 미적용
+EXPLAIN
+SELECT * FROM NOTICE WHERE createDate IS NULL;
+
+# IN 연산자를 사용하여 검색하는 경우, IN 목록의 개수가 많을수록 인덱스의 효과가 감소할 수 있다.
+EXPLAIN
+SELECT * FROM NOTICE WHERE createDate IN ('2023-01-15', '2023-03-01', '2023-03-15', ..., '2023-05-07', '2023-05-15', '2023-05-28');
