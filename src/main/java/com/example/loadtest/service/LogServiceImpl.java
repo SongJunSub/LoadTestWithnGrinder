@@ -60,12 +60,13 @@ public class LogServiceImpl implements LogService{
         // 비동기 방식
         notices.forEach(notice ->
                 CompletableFuture.runAsync(() ->
-                        sendLog(notice.getTitle()), customThreadPool).exceptionally(throwable -> {
-                    log.error("Exception Occurred: " + throwable.getMessage());
+                        sendLog(notice.getTitle()), customThreadPool)
+                        .exceptionally(throwable -> {
+                            log.error("Exception Occurred: " + throwable.getMessage());
 
-                    // 이슈 발생을 담당자가 인지할 수 있도록 추후 추가적인 코드가 필요하다.
-                    return null;
-                })
+                            // 이슈 발생을 담당자가 인지할 수 있도록 추후 추가적인 코드가 필요하다.
+                            return null;
+                        })
         );
 
         long afterTime = System.currentTimeMillis();
@@ -79,6 +80,7 @@ public class LogServiceImpl implements LogService{
     public void sendLog(String message) {
         try {
             // 임의의 작업 시간을 주기위해 설정한다.
+            // 각 작업의 소요시간을 Thread.sleep(1) 1ms로 대체한다.
             Thread.sleep(1);
 
             log.info("Message: " + message);
