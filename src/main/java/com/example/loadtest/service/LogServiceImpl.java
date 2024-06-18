@@ -25,7 +25,7 @@ public class LogServiceImpl implements LogService{
     ExecutorService customThreadPool = Executors.newWorkStealingPool(threadPoolSize);
 
     @Override
-    public long sendAll() {
+    public long sendAllUsingSync() {
         ForkJoinPool commonPool = ForkJoinPool.commonPool();
         // common pool의 스레드 수를 확인한다.
         int commonPoolSize = commonPool.getParallelism();
@@ -36,17 +36,36 @@ public class LogServiceImpl implements LogService{
         long beforeTime = System.currentTimeMillis();
 
         // 동기 방식
-        // notices.forEach(notice -> sendLog(notice.getTitle()));
+        notices.forEach(notice -> sendLog(notice.getTitle()));
+
+        long afterTime = System.currentTimeMillis();
+        long diffTime = afterTime - beforeTime;
+
+        log.info("실행 시간: " + diffTime + "ms");
+
+        return diffTime;
+    }
+
+    @Override
+    public long sendAllUsingAsync() {
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        // common pool의 스레드 수를 확인한다.
+        int commonPoolSize = commonPool.getParallelism();
+
+        System.out.println("Common Pool Size: " + commonPoolSize);
+
+        List<Notice> notices = noticeService.findAllNotices();
+        long beforeTime = System.currentTimeMillis();
 
         // 비동기 방식
         notices.forEach(notice ->
                 CompletableFuture.runAsync(() ->
                         sendLog(notice.getTitle()), customThreadPool).exceptionally(throwable -> {
-                            log.error("Exception Occurred: " + throwable.getMessage());
+                    log.error("Exception Occurred: " + throwable.getMessage());
 
-                            // 이슈 발생을 담당자가 인지할 수 있도록 추후 추가적인 코드가 필요하다.
-                            return null;
-                        })
+                    // 이슈 발생을 담당자가 인지할 수 있도록 추후 추가적인 코드가 필요하다.
+                    return null;
+                })
         );
 
         long afterTime = System.currentTimeMillis();

@@ -15,9 +15,16 @@ public class LogController {
 
     private final LogService logService;
 
-    @GetMapping("/send/logs")
-    public ResponseEntity<Object> sendAll() {
-        long result = logService.sendAll();
+    @GetMapping("/send/sync/logs")
+    public ResponseEntity<Object> sendAllUsingSync() {
+        long result = logService.sendAllUsingSync();
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/send/async/logs")
+    public ResponseEntity<Object> sendAllUsingAsync() {
+        long result = logService.sendAllUsingAsync();
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

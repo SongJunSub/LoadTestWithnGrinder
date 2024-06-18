@@ -2,6 +2,8 @@ package com.example.loadtest.service;
 
 public interface LogService {
 
-    public long sendAll();
+    public long sendAllUsingSync();
+
+    public long sendAllUsingAsync();
 
 }
