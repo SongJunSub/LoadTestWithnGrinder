@@ -2,12 +2,14 @@ package com.example.loadtest.controller;
 
 import com.example.loadtest.dto.Notice;
 import com.example.loadtest.service.NoticeService;
+import com.example.loadtest.util.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,12 +40,10 @@ public class NoticeController {
     @GetMapping("/notice/dates")
     public ResponseEntity<Object> findNoticesByDates(@RequestParam("startDate") String startDate,
                                                      @RequestParam("endDate") String endDate) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startDateTime = DateUtils.convertToStartDate(startDate);
+        LocalDateTime endDateTime = DateUtils.convertToEndDate(endDate);
 
-        List<Notice> result = noticeService.findNoticesByDates(
-                LocalDateTime.parse(startDate, dateTimeFormatter),
-                LocalDateTime.parse(endDate, dateTimeFormatter)
-        );
+        List<Notice> result = noticeService.findNoticesByDates(startDateTime, endDateTime);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
