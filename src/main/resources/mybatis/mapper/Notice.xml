@@ -6,13 +6,19 @@
     <select id="findAll" resultType="com.example.loadtest.dto.Notice">
         SELECT *
         FROM NOTICE
-        LIMIT 5000;
+        LIMIT 5000
     </select>
 
     <select id="findByPage" parameterType="Integer" resultType="com.example.loadtest.dto.Notice">
         SELECT *
         FROM NOTICE
-        LIMIT #{page}, #{pageSize};
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <select id="findNoticesByDates" resultType="com.example.loadtest.dto.Notice">
+        SELECT *
+        FROM NOTICE
+        WHERE createDate BETWEEN #{startDate} AND #{endDate}
     </select>
 
 </mapper>
